@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <style>
+      body {
+        font-family: Helvetica, sans-serif;
+        font-size: 10px;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 10px;
+      }
+      th,
+      td {
+        border: 1px solid #ddd;
+        padding: 5px;
+        text-align: left;
+      }
+      th {
+        background-color: #f2f2f2;
+      }
+    </style>
+  </head>
+  <body>
+    <img src="{{ logo_path }}" width="100" />
+    <p>
+      Antananarivo, Madagascar<br />
+      Date : {{ date_vente }}<br />
+      Facture N° : {{ num_facture }} <br>
+      Caisse : {{ caissier_nom }}
+    </p>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Médicament</th>
+          <th>Description</th>
+          <th>Qté</th>
+          <th>P.U</th>
+          <th>Total</th>
+        </tr>
+      </thead>
+      <tbody>
+        {{ lignes_medicaments }}
+      </tbody>
+    </table>
+
+    <h3>TOTAL : {{ total_global }} Ar</h3>
+    <p>Merci </p>
+  </body>
+</html>
