@@ -1,10 +1,8 @@
 import axios from "axios";
 
-// Forcez temporairement l'URL complète avec /api pour être 100% sûr
-const API_BASE_URL = 'https://alwaysdata.net';
-
+// On force l'URL absolue sans configuration dynamique pour le test
 const api = axios.create({
-    baseURL: API_BASE_URL, 
+    baseURL: 'https://alwaysdata.net',
     headers: {
         "Content-Type": "application/json"
     }
