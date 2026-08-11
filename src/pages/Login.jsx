@@ -14,42 +14,42 @@ function Login() {
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  const handleLogin = async (e) => {
-    e.preventDefault();
-    setLoading(true);
+const handleLogin = async (e) => {
+  e.preventDefault();
+  setLoading(true);
 
-    try {
-      const response = await api.post("/auth.php?action=login", {
-        email,
-        password,
-      });
+  try {
+    const response = await api.post("/auth.php?action=login", {
+      email,
+      password,
+    });
 
-      if (response.data.success) {
-        localStorage.setItem("isLoggedIn", "true");
-        localStorage.setItem("user", JSON.stringify(response.data.user));
+    if (response.data && response.data.success) {
+      localStorage.setItem("isLoggedIn", "true");
+      localStorage.setItem("user", JSON.stringify(response.data.user));
 
-        // --- NOUVEAU : Récupération du rôle ---
-        const user = response.data.user;
+      const user = response.data.user;
+      toast.success("Bienvenue sur E-Stock Pharma !");
 
-        toast.success("Bienvenue sur E-Stock Pharma !");
-
-        // Redirection conditionnelle
-        if (user.role === "caissier") {
-          navigate("/ventes");
-        } else {
-          navigate("/dashboard");
-        }
+      // Redirection conditionnelle
+      if (user && user.role === "caissier") {
+        navigate("/ventes");
+      } else {
+        navigate("/dashboard");
       }
-      {
-        // Affiche l'erreur via Toast au lieu d'une div rouge
-        toast.error(response.data.message || "Identifiants invalides");
-      }
-    } catch (err) {
-      toast.error("Erreur technique : impossible de contacter le serveur.");
-    } finally {
-      setLoading(false);
+    } else {
+      // AJOUT DU ELSE ICI : S'exécute uniquement si success est false ou absent
+      toast.error(response.data?.message || "Identifiants invalides");
     }
-  };
+  } catch (err) {
+    // Gestion propre des erreurs serveurs ou réseau
+    const errorMessage = err.response?.data?.message || "Erreur technique : impossible de contacter le serveur.";
+    toast.error(errorMessage);
+  } finally {
+    setLoading(false);
+  }
+};
+
 
   return (
     <div className="login-container d-flex align-items-center justify-content-center vh-100 bg-light">
