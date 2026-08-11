@@ -1,8 +1,10 @@
 import axios from "axios";
 
-// Supprimez temporairement le import.meta.env pour forcer l'URL
+// URL 100% complète et exacte sans omission de sous-domaine ni de dossier
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'https://tiavinaarmel.alwaysdata.net/pharmacie/api';
+
 const api = axios.create({
-    baseURL: 'https://alwaysdata.net', 
+    baseURL: API_BASE_URL,
     headers: {
         "Content-Type": "application/json"
     }
