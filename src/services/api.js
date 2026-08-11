@@ -1,10 +1,10 @@
 import axios from "axios";
 
-// On utilise bien la même variable partout !
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'https://tiavinaarmel.alwaysdata.net/pharmacie';
+// Forcez temporairement l'URL complète avec /api pour être 100% sûr
+const API_BASE_URL = 'https://alwaysdata.net';
 
 const api = axios.create({
-    baseURL: API_BASE_URL, // <--- Correction ici : API_BASE_URL au lieu de API_URL
+    baseURL: API_BASE_URL, 
     headers: {
         "Content-Type": "application/json"
     }
