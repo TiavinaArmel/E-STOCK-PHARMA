@@ -5,12 +5,10 @@ const API_BASE_URL = import.meta.env.VITE_API_URL || 'https://tiavinaarmel.alway
 
 const api = axios.create({
     baseURL: API_BASE_URL,
+    withCredentials: true, // ✅ Placé au bon endroit (option Axios)
     headers: {
-        "Content-Type": "application/json",
-        withCredentials: true 
+        "Content-Type": "application/json"
     }
 });
-
-api.defaults.withCredentials = true;
 
 export default api;
