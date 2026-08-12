@@ -3,16 +3,24 @@ import { toast } from "react-toastify";
 import api from "../services/api";
 import Sidebar from "../components/Sidebar";
 import Navbar from "../components/Navbar";
+
 const Rapport = () => {
   const [demandes, setDemandes] = useState([]);
 
   const loadDemandes = async () => {
     try {
       const res = await api.get("/admin.php?action=get_password_requests");
-      setDemandes(res.data);
+      
+      // 🟢 FIX : On extrait le tableau même si PHP renvoie un objet enveloppé
+      const dataArray = Array.isArray(res.data) 
+        ? res.data 
+        : (res.data?.demandes || res.data?.requests || res.data?.data || []);
+
+      setDemandes(dataArray);
     } catch (err) {
       console.error("Erreur chargement:", err);
       toast.error("Impossible de charger les demandes.");
+      setDemandes([]); // Sécurité : on remet un tableau vide en cas d'erreur
     }
   };
 
@@ -28,14 +36,14 @@ const Rapport = () => {
         newPassword,
       });
 
-      const isSuccess = res.data === true || res.data.success === true;
+      const isSuccess = res.data === true || res.data?.success === true;
 
       if (isSuccess) {
         toast.success("Mot de passe mis à jour avec succès !");
         loadDemandes();
       } else {
         toast.error(
-          "Erreur : " + (res.data.message || "La mise à jour a échoué."),
+          "Erreur : " + (res.data?.message || "La mise à jour a échoué.")
         );
       }
     } catch (err) {
@@ -51,7 +59,9 @@ const Rapport = () => {
         <Navbar />
         <div className="container mt-4">
           <h2>Demandes de changement de mot de passe</h2>
-          {demandes.length === 0 ? (
+          
+          {/* 🟢 Sécurité supplémentaire : vérification que c'est bien un tableau */}
+          {!Array.isArray(demandes) || demandes.length === 0 ? (
             <p>Aucune demande en attente.</p>
           ) : (
             <ul className="list-group">
@@ -61,7 +71,7 @@ const Rapport = () => {
                   className="list-group-item d-flex justify-content-between align-items-center"
                 >
                   <div>
-                    <strong>{d.nom}</strong> ({d.email})
+                    <strong>{d.nom || d.username || "Utilisateur"}</strong> ({d.email})
                     <br />
                     <small className="text-muted">ID demande: {d.id}</small>
                   </div>
@@ -71,7 +81,7 @@ const Rapport = () => {
                       validerChangement(
                         d.id,
                         d.id_user,
-                        d.nouveau_password_hash,
+                        d.nouveau_password_hash
                       )
                     }
                   >
